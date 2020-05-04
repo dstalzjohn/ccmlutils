@@ -3,7 +3,7 @@ from os.path import dirname
 from typing import List, Tuple, Set, Dict
 import pandas as pd
 
-from samplemlproject.config.envconfig import get_short_id
+from ccmlutils.config.envconfig import get_short_id
 from ccmlutils.utilities.experimentdata import ExperimentData
 
 

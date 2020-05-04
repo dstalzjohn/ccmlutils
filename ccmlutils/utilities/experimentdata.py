@@ -7,7 +7,7 @@ import yaml
 import pandas as pd
 import numpy as np
 
-from samplemlproject.config.envconfig import RUN_ID_KEY, SHORT_ID_KEY
+from ccmlutils.config.envconfig import RUN_ID_KEY, SHORT_ID_KEY
 
 
 class ModelNotFound(Exception):

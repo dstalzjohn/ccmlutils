@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 from importlib import import_module
 
-from samplemlproject.config.envconfig import replace_id_keys
+from ccmlutils.config.envconfig import replace_id_keys
 
 
 class ImportException(Exception):
