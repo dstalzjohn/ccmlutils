@@ -1,5 +1,5 @@
 from os.path import join
-from typing import Dict, Tuple, List, Optional
+from typing import Dict, Tuple, List, Optional, Any
 
 import keras.preprocessing.image as keras_image
 
@@ -11,7 +11,7 @@ def get_image_flow_directory_generator(filepath: str,
                                        rescale: Optional[float] = None,
                                        classes: Optional[List[str]] = None,
                                        shuffle: bool = False,
-                                       ) -> Dict:
+                                       ) -> Any:
     """
     Creates an image dataset for training or testing
     :param filepath: path where the images are located
@@ -24,7 +24,7 @@ def get_image_flow_directory_generator(filepath: str,
     :return:
     """
     image_generator = keras_image.ImageDataGenerator(rescale=rescale)
-    # switch between categorical and binary if exactyl two classes are given
+    # switch between categorical and binary if exactly two classes are given
     # if no class list is given, categorical is used
     class_mode = 'categorical'
     if classes is not None and len(classes) == 2:

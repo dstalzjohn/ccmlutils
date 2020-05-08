@@ -7,6 +7,8 @@ import yaml
 import pandas as pd
 import numpy as np
 
+from pandas.errors import EmptyDataError
+
 from ccmlutils.config.envconfig import RUN_ID_KEY, SHORT_ID_KEY
 
 
@@ -31,6 +33,10 @@ class MetricValue(object):
     epoch: int
 
 
+class EmptyExperimentError(Exception):
+    pass
+
+
 class ExperimentData(object):
 
     def __init__(self, filepath: str, project_info_file="project_info.yml", train_log_file="train_logs.csv",
@@ -39,7 +45,10 @@ class ExperimentData(object):
         self.project_info_file = project_info_file
         self.train_log_file = train_log_file
         self.run_id, self.short_id = load_exp_info(join(self.filepath, self.project_info_file))
-        self.log_data: pd.DataFrame = load_loggings(join(self.filepath, self.train_log_file))
+        try:
+            self.log_data: pd.DataFrame = load_loggings(join(self.filepath, self.train_log_file))
+        except EmptyDataError as e:
+            raise EmptyExperimentError(f"Experiment {self.run_id} - {self.short_id} has no valid train_log.") from e
         self.model_subfolder: str = model_subfolder
         self.epoch_formatting: str = epoch_formatting
 

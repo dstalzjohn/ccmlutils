@@ -4,7 +4,8 @@ from typing import List, Tuple, Set, Dict
 import pandas as pd
 
 from ccmlutils.config.envconfig import get_short_id
-from ccmlutils.utilities.experimentdata import ExperimentData
+from ccmlutils.utilities.experimentdata import ExperimentData, EmptyExperimentError
+import logging
 
 
 def get_exp_data_node(exp_output_folder: str, exp_id: str, *args, **kwargs) -> Dict[str, ExperimentData]:
@@ -25,8 +26,12 @@ class ExperimentManager(object):
 
     def __init__(self, path):
         self.path = path
-        self.experiments: List[ExperimentData] = \
-            [ExperimentData(f.path) for f in os.scandir(path) if f.is_dir()]
+        self.experiments: List[ExperimentData] = []
+        for path in [f.path for f in os.scandir(path) if f.is_dir()]:
+            try:
+                self.experiments.append(ExperimentData(path))
+            except EmptyExperimentError:
+                logging.info(f"Empty Experiment at: {path}")
         self.exp_dict = {exp.short_id: exp for exp in self.experiments}
         self.exp_dict.update({exp.run_id: exp for exp in self.experiments})
 

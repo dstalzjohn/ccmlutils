@@ -8,10 +8,38 @@ import pandas as pd
 import yaml
 
 from ccmlutils.utilities.factoryutils import subs_path_and_create_folder
+from abc import ABC, abstractmethod
+
+
+class AbstractPredictionContainer(ABC):
+
+    @abstractmethod
+    def get_pred_list(self) -> List[float]:
+        pass
+
+    @abstractmethod
+    def get_pred_dict(self) -> Dict[str, float]:
+        pass
+
+    @abstractmethod
+    def get_default_dict(self) -> dict:
+        pass
+
+    @abstractmethod
+    def get_df_dict(self) -> dict:
+        pass
+
+    @abstractmethod
+    def get_np_preds(self) -> np.ndarray:
+        pass
+
+    @abstractmethod
+    def get_np_targets(self) -> np.ndarray:
+        pass
 
 
 @dataclass
-class PredictionContainer(object):
+class PredictionContainer(AbstractPredictionContainer):
     filename: str
     class_idx: int
     class_name: Optional[str]
@@ -37,11 +65,23 @@ class PredictionContainer(object):
         out_dict.update(self.get_pred_dict())
         return out_dict
 
+    def get_np_preds(self) -> np.ndarray:
+        if len(self.prediction) == 1:
+            pred_idxs = np.round(self.prediction)
+        elif len(self.prediction) > 1:
+            pred_idxs = np.argmax(self.prediction)
+        else:
+            raise Exception("No prediction column available!")
+        return pred_idxs
+
+    def get_np_targets(self) -> np.ndarray:
+        return np.array(np.round(self.class_idx))
+
 
 class Predictions(object):
 
-    def __init__(self, preds: List[PredictionContainer], class_idxs: Dict[str, int]):
-        self.preds = preds
+    def __init__(self, preds: List[AbstractPredictionContainer], class_idxs: Dict[str, int]):
+        self.preds: List[AbstractPredictionContainer] = preds
         self.class_idxs = class_idxs
 
     def get_list_data(self) -> List[dict]:
@@ -54,18 +94,13 @@ class Predictions(object):
         return df
 
     def get_class_and_pred_idxs(self) -> Tuple[np.ndarray, np.ndarray]:
-        cur_df = self.get_df_data()
-        target_idxs = np.round(cur_df["class_idx"])
-        pred_cols = sorted([c for c in cur_df.columns if c.startswith("pred_")])
+        target_idxs = list()
+        pred_idxs = list()
+        for pred in self.preds:
+            target_idxs.append(pred.get_np_targets())
+            pred_idxs.append(pred.get_np_preds())
 
-        if len(pred_cols) == 1:
-            pred_idxs = np.round(cur_df["pred_0000"])
-        elif len(pred_cols) > 1:
-            pred_idxs = cur_df[pred_cols].idxmax(axis=1)
-            pred_idxs = pred_idxs.apply(lambda x: int(x[5:]))
-        else:
-            raise Exception("No prediction column available!")
-        return target_idxs, pred_idxs
+        return np.array(target_idxs), np.array(pred_idxs)
 
     def save_df(self, filepath: str):
         fastparquet.write(filepath, self.get_df_data())
