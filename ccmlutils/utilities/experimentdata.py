@@ -15,6 +15,7 @@ from ccmlutils.config.envconfig import RUN_ID_KEY, SHORT_ID_KEY
 class ModelNotFound(Exception):
     pass
 
+
 def load_exp_info(exp_info_file) -> Tuple[str, str]:
     with open(exp_info_file, "r") as f:
         data = yaml.load(f)
@@ -44,7 +45,10 @@ class ExperimentData(object):
         self.filepath = filepath
         self.project_info_file = project_info_file
         self.train_log_file = train_log_file
-        self.run_id, self.short_id = load_exp_info(join(self.filepath, self.project_info_file))
+        try:
+            self.run_id, self.short_id = load_exp_info(join(self.filepath, self.project_info_file))
+        except FileNotFoundError as e:
+            raise EmptyExperimentError(f"Experiment {self.filepath} has no valid project file.") from e
         try:
             self.log_data: pd.DataFrame = load_loggings(join(self.filepath, self.train_log_file))
         except EmptyDataError as e:
@@ -111,7 +115,6 @@ class ExperimentData(object):
             raise ModelNotFound(f"Model from epoch: {epoch} not found in exp: {self.short_id}")
 
         return ret_model
-
 
 
 if __name__ == '__main__':
