@@ -1,8 +1,8 @@
 from typing import Optional, Callable
 
-from keras import Model
-from keras.losses import Loss
-from keras.optimizers import Optimizer
+from tensorflow.keras.losses import Loss
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Optimizer
 
 
 def fit_generator(model: Callable[[], Model], train_set, validation_set, epochs: int,
@@ -23,4 +23,4 @@ def fit_generator(model: Callable[[], Model], train_set, validation_set, epochs:
                                   validation_steps=validation_steps,
                                   steps_per_epoch=steps_per_epoch)
 
-    return dict(history=history)
+    return dict(history=history.history)

@@ -1,10 +1,11 @@
 from pathlib import Path
 from typing import Optional, Dict, Any
 
-from keras import Model
-from keras.models import load_model
+
 from kedro.io import AbstractVersionedDataSet, Version, DataSetError
 import tensorflow as tf
+from tensorflow_core.python.keras.models import Model
+from tensorflow_core.python.keras.saving.save import load_model
 
 
 class KerasModelDataset(AbstractVersionedDataSet):
