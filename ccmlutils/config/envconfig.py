@@ -3,6 +3,7 @@ from os import getenv, environ
 RUN_ID_KEY = "RUN_ID"
 SHORT_ID_KEY = "SHORT_ID"
 PIPELINE_KEY = "PIPELINE"
+EXP_NAME_KEY = "EXPERIMENT_NAME"
 
 
 def get_run_id() -> str:
@@ -11,6 +12,10 @@ def get_run_id() -> str:
 
 def get_short_id() -> str:
     return getenv(SHORT_ID_KEY)
+
+
+def get_exp_name() -> str:
+    return getenv(EXP_NAME_KEY)
 
 
 def replace_id_keys(input_str: str) -> str:

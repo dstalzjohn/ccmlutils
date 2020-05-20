@@ -5,11 +5,12 @@ import yaml
 from tensorflow_core.python.keras.callbacks import Callback, CSVLogger
 
 from ccmlutils.callbacks.gitversioncallback import produce_git_version_yaml
-from ccmlutils.config.envconfig import get_run_id, get_short_id, RUN_ID_KEY, SHORT_ID_KEY
+from ccmlutils.config import envconfig as envc
 
 
 def produce_project_info(filepath: str):
-    out_dict = {RUN_ID_KEY: get_run_id(), SHORT_ID_KEY: get_short_id()}
+    out_dict = {envc.RUN_ID_KEY: envc.get_run_id(), envc.SHORT_ID_KEY: envc.get_short_id(),
+                envc.EXP_NAME_KEY: envc.get_exp_name()}
     with open(filepath, 'w') as outfile:
         yaml.dump(out_dict, outfile, default_flow_style=False)
 
