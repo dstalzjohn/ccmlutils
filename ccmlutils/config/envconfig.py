@@ -18,6 +18,12 @@ def get_exp_name() -> str:
     return getenv(EXP_NAME_KEY)
 
 
+def get_and_ask_for_exp_name() -> str:
+    if not EXP_NAME_KEY in environ:
+        environ[EXP_NAME_KEY] = input("Enter the experiment name: \n")
+    return get_exp_name()
+
+
 def replace_id_keys(input_str: str) -> str:
     input_str = input_str.replace("$" + SHORT_ID_KEY, get_short_id())
     input_str = input_str.replace("$" + RUN_ID_KEY, get_run_id())
