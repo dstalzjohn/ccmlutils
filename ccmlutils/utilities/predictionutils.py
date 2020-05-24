@@ -139,9 +139,15 @@ def save_predictions(predictions: Predictions,
 
 def save_predictions_node(predictions: Predictions,
                           store_path: str,
-                          parq_filename: str = None,
-                          yml_filename: str = None):
+                          filename: str,
+                          set_name: str = None):
     store_path = subs_path_and_create_folder(store_path)
+    if set_name is None:
+        parq_filename = filename + ".parq"
+        yml_filename= filename + ".yml"
+    else:
+        parq_filename = filename + "_" + set_name + ".parq"
+        yml_filename = filename + "_" + set_name + ".yml"
     save_predictions(predictions,
                      store_path,
                      parq_filename,
