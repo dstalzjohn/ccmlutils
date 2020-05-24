@@ -32,4 +32,7 @@ def get_git_revision_of_module(module_name: str):
 def fast_commit(files: List[str], message: str, path: str = "."):
     message = "no message" if message == "" else message
     subprocess.check_output(['git', 'add'] + files, cwd=path)
-    subprocess.check_output(['git', 'commit', '-m', f"{message}"])
+    try:
+        subprocess.check_output(['git', 'commit', '-m', f"{message}"])
+    except subprocess.CalledProcessError:
+        print("Nothing to commit!")
