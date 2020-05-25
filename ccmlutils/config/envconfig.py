@@ -1,4 +1,5 @@
 from os import getenv, environ
+from typing import Tuple
 
 RUN_ID_KEY = "RUN_ID"
 SHORT_ID_KEY = "SHORT_ID"
@@ -19,10 +20,13 @@ def get_exp_name() -> str:
     return getenv(EXP_NAME_KEY)
 
 
-def get_and_ask_for_exp_name() -> str:
+def get_and_ask_for_exp_name() -> Tuple[str, bool]:
+    """Returns the exp name and whether it was set in the environment"""
+    set_in_env = True
     if not EXP_NAME_KEY in environ:
+        set_in_env = False
         environ[EXP_NAME_KEY] = input("Enter the experiment name: \n")
-    return get_exp_name()
+    return get_exp_name(), set_in_env
 
 
 def replace_id_keys(input_str: str) -> str:
