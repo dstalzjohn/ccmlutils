@@ -21,12 +21,13 @@ def get_exp_name() -> str:
 
 
 def get_and_ask_for_exp_name() -> Tuple[str, bool]:
-    """Returns the exp name and whether it was set in the environment"""
-    set_in_env = True
+    """Returns the exp name and whether a commit should be applied"""
+    do_commit = False
     if not EXP_NAME_KEY in environ:
-        set_in_env = False
-        environ[EXP_NAME_KEY] = input("Enter the experiment name: \n")
-    return get_exp_name(), set_in_env
+        cur_input = input("Enter the experiment name: \n")
+        environ[EXP_NAME_KEY] = cur_input
+        do_commit = bool(len(cur_input) > 0)
+    return get_exp_name(), do_commit
 
 
 def replace_id_keys(input_str: str) -> str:
