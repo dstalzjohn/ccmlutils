@@ -33,10 +33,8 @@ def class_or_func_creation(input_dict: Optional[dict] = None) -> Any:
     imported_module = import_module(type_list[0])
     imported_type = getattr(imported_module, type_list[1])
     if use_params:
-        try:
-            init_class = imported_type(**input_dict["params"])
-        except KeyError as e:
-            raise ImportException("Keyword params required when using type to import") from e
+        init_dict = input_dict.get("params", dict())
+        init_class = imported_type(**init_dict)
     else:
         init_class = imported_type
 
