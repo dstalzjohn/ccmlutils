@@ -1,6 +1,6 @@
 from typing import Dict
 
-from keras.models import load_model, Model
+from tensorflow.keras.models import load_model, Model
 
 from ccmlutils.utilities.experimentdata import ExperimentData
 
