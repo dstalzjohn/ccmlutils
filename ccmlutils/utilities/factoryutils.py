@@ -46,3 +46,10 @@ def subs_path_and_create_folder(filepath: str) -> str:
     p = Path(filepath)
     p.parent.mkdir(parents=True, exist_ok=True)
     return filepath
+
+
+def init_loss(loss: str or dict):
+    if type(loss) is str:
+        return loss
+    loss_dict = {k: class_or_func_creation(v) for k,v in loss.items()}
+    return loss_dict
