@@ -41,7 +41,8 @@ class ExperimentManager(object):
                              number_of_exps: int) -> List[Tuple[str, ExperimentData]]:
         exp_list = self.experiments
         number_of_exps = min(number_of_exps, len(exp_list))
-        value_exps = [(exp, exp.get_best_metric_value(metric_name, mode)) for exp in exp_list]
+        value_exps = [(exp, exp.get_best_metric_value(metric_name, mode))
+                      for exp in exp_list if exp.has_metric(metric_name)]
         reversed = True if mode == "max" else False
         value_exps = sorted(value_exps, reverse=reversed, key=lambda x: x[1].value)
         value_exps = value_exps[:number_of_exps]

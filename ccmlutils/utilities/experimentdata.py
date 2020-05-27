@@ -64,6 +64,9 @@ class ExperimentData(object):
         metrics.remove("epoch")
         return metrics
 
+    def has_metric(self, metric_name: str) -> bool:
+        return metric_name in self.get_metrics()
+
     def get_log_for_metric(self, metric_name: str):
         series_epoch = self.log_data["epoch"]
         series_metrics = self.log_data[metric_name]
