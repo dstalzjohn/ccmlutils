@@ -22,10 +22,10 @@ def class_or_func_creation(input_dict: Optional[dict] = None) -> Any:
     """
     use_params: bool = False
     if "type" in input_dict:
-        cur_type: str = input_dict.pop("type")
+        cur_type: str = input_dict["type"]
         use_params = True
     elif "function" in input_dict:
-        cur_type: str = input_dict.pop("function")
+        cur_type: str = input_dict["function"]
     else:
         raise ImportException("Neither type nor function keyword in param dict!")
 
