@@ -9,11 +9,11 @@ class ImportException(Exception):
     pass
 
 
-def class_or_func_creation_node(input_dict=None) -> Dict[str, Any]:
-    return {'class': class_or_func_creation(input_dict)}
+def init_object_node(input_dict=None) -> Dict[str, Any]:
+    return {'class': init_object(input_dict)}
 
 
-def class_or_func_creation(input_dict: Optional[dict] = None) -> Any:
+def init_object(input_dict: Optional[dict] = None) -> Any:
     """
     Imports dynamically a class or function. When `type` is used the object is initialized with
     the given `params` accordingly. Otherwise (with `function`-keyword) only the imported object is returned.
@@ -51,5 +51,5 @@ def subs_path_and_create_folder(filepath: str) -> str:
 def init_loss(loss: str or dict):
     if type(loss) is str:
         return loss
-    loss_dict = {k: class_or_func_creation(v) for k,v in loss.items()}
+    loss_dict = {k: init_object(v) for k, v in loss.items()}
     return loss_dict
