@@ -16,6 +16,14 @@ class ModelNotFound(Exception):
     pass
 
 
+class MetricNotAvailable(Exception):
+    pass
+
+
+class LogEmpty(Exception):
+    pass
+
+
 def load_exp_info(exp_info_file) -> Tuple[str, str]:
     with open(exp_info_file, "r") as f:
         data = yaml.load(f)
@@ -52,7 +60,8 @@ class ExperimentData(object):
         try:
             self.log_data: pd.DataFrame = load_loggings(join(self.filepath, self.train_log_file))
         except EmptyDataError as e:
-            raise EmptyExperimentError(f"Experiment {self.run_id} - {self.short_id} has no valid train_log.") from e
+            # raise EmptyExperimentError(f"Experiment {self.run_id} - {self.short_id} has no valid train_log.") from e
+            self.log_data = pd.DataFrame()
         self.model_subfolder: str = model_subfolder
         self.epoch_formatting: str = epoch_formatting
 
@@ -61,19 +70,29 @@ class ExperimentData(object):
 
     def get_metrics(self) -> List[str]:
         metrics = list(self.log_data.columns)
-        metrics.remove("epoch")
+        try:
+            metrics.remove("epoch")
+        except ValueError:
+            pass
         return metrics
 
     def has_metric(self, metric_name: str) -> bool:
         return metric_name in self.get_metrics()
 
     def get_log_for_metric(self, metric_name: str):
-        series_epoch = self.log_data["epoch"]
+        series_epoch = self._get_epoch_series()
         series_metrics = self.log_data[metric_name]
         series_name = pd.Series(data=[self.short_id] * len(series_epoch))
         df = pd.DataFrame({"epoch": series_epoch, metric_name: series_metrics, "name": series_name})
 
         return df
+
+    def _get_epoch_series(self):
+        try:
+            series_epoch = self.log_data["epoch"]
+        except KeyError as e:
+            raise LogEmpty(f"Log of experiment is empty: {self.short_id}") from e
+        return series_epoch
 
     def get_best_metric_value(self, metric_name: str, mode) -> MetricValue:
         """
@@ -82,7 +101,7 @@ class ExperimentData(object):
         :param mode: either 'min' or 'max'
         :return: MetricValue
         """
-        series_epoch = self.log_data["epoch"]
+        series_epoch = self._get_epoch_series()
         series_metrics = self.log_data[metric_name]
         if mode == "max":
             idx = np.argmax(series_metrics)
