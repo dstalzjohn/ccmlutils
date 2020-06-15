@@ -30,7 +30,10 @@ def init_object(input_dict: Optional[dict] = None) -> Any:
         raise ImportException("Neither type nor function keyword in param dict!")
 
     type_list = cur_type.rsplit(".", 1)
-    imported_module = import_module(type_list[0])
+    try:
+        imported_module = import_module(type_list[0])
+    except ModuleNotFoundError as e:
+        raise Exception(f"Module with name not found: {type_list[0]}") from e
     imported_type = getattr(imported_module, type_list[1])
     if use_params:
         init_dict = input_dict.get("params", dict())

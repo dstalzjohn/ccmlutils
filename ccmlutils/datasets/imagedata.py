@@ -1,7 +1,7 @@
 from os.path import join
 from typing import Dict, Tuple, List, Optional, Any
 
-import keras.preprocessing.image as keras_image
+import tensorflow.keras.preprocessing.image as keras_image
 
 
 def get_image_flow_directory_generator(filepath: str,
