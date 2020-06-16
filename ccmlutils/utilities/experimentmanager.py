@@ -8,13 +8,14 @@ from ccmlutils.utilities.experimentdata import ExperimentData, EmptyExperimentEr
 import logging
 
 
-def get_exp_data_node(exp_output_folder: str, exp_id: str, *args, **kwargs) -> Dict[str, ExperimentData]:
+def get_exp_data_node(
+    exp_output_folder: str, exp_id: str, *args, **kwargs
+) -> Dict[str, ExperimentData]:
     exp_output_folder = dirname(exp_output_folder)
     if exp_id == "":
         exp_id = get_short_id()
     exp_data = get_exp_data(exp_output_folder, exp_id)
-    return dict(experiment=exp_data,
-                exp_path=exp_data.get_store_path())
+    return dict(experiment=exp_data, exp_path=exp_data.get_store_path())
 
 
 def get_exp_data(exp_output_folder: str, exp_id: str):
@@ -23,7 +24,6 @@ def get_exp_data(exp_output_folder: str, exp_id: str):
 
 
 class ExperimentManager(object):
-
     def __init__(self, path):
         self.path = path
         self.experiments: List[ExperimentData] = []
@@ -35,19 +35,23 @@ class ExperimentManager(object):
         self.exp_dict = {exp.short_id: exp for exp in self.experiments}
         self.exp_dict.update({exp.run_id: exp for exp in self.experiments})
 
-    def get_best_experiments(self,
-                             metric_name: str,
-                             mode: str,
-                             number_of_exps: int) -> List[Tuple[str, ExperimentData]]:
+    def get_best_experiments(
+        self, metric_name: str, mode: str, number_of_exps: int
+    ) -> List[Tuple[str, ExperimentData]]:
         exp_list = self.experiments
         number_of_exps = min(number_of_exps, len(exp_list))
-        value_exps = [(exp, exp.get_best_metric_value(metric_name, mode))
-                      for exp in exp_list if exp.has_metric(metric_name)]
+        value_exps = [
+            (exp, exp.get_best_metric_value(metric_name, mode))
+            for exp in exp_list
+            if exp.has_metric(metric_name)
+        ]
         reversed = True if mode == "max" else False
         value_exps = sorted(value_exps, reverse=reversed, key=lambda x: x[1].value)
         value_exps = value_exps[:number_of_exps]
 
-        return [(f"{exp.short_id} - {value.value:0.2f}", exp) for exp, value in value_exps]
+        return [
+            (f"{exp.short_id} - {value.value:0.2f}", exp) for exp, value in value_exps
+        ]
 
     def get_metrics(self) -> List[str]:
         metric_set: Set[str] = set()

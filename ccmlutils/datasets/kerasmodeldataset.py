@@ -9,10 +9,7 @@ from tensorflow_core.python.keras.saving.save import load_model
 
 
 class KerasModelDataset(AbstractVersionedDataSet):
-
-    def __init__(self,
-                 filepath: str,
-                 version: Optional[Version] = None):
+    def __init__(self, filepath: str, version: Optional[Version] = None):
         super().__init__(filepath=Path(filepath), version=version)
 
     def _load(self) -> Model:
@@ -35,9 +32,4 @@ class KerasModelDataset(AbstractVersionedDataSet):
         return Path(path).exists()
 
     def _describe(self) -> Dict[str, Any]:
-        return dict(
-            filepath=self._filepath,
-            version=self._version,
-        )
-
-
+        return dict(filepath=self._filepath, version=self._version,)

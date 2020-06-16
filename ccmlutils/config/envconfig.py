@@ -47,6 +47,3 @@ def set_pipeline_name(name: str):
 
 def get_pipeline_name() -> str:
     return getenv(PIPELINE_KEY)
-
-
-

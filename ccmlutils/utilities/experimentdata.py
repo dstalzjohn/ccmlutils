@@ -47,18 +47,29 @@ class EmptyExperimentError(Exception):
 
 
 class ExperimentData(object):
-
-    def __init__(self, filepath: str, project_info_file="project_info.yml", train_log_file="train_logs.csv",
-                 model_subfolder: str="models", epoch_formatting: str = "ep{epoch:03d}"):
+    def __init__(
+        self,
+        filepath: str,
+        project_info_file="project_info.yml",
+        train_log_file="train_logs.csv",
+        model_subfolder: str = "models",
+        epoch_formatting: str = "ep{epoch:03d}",
+    ):
         self.filepath = filepath
         self.project_info_file = project_info_file
         self.train_log_file = train_log_file
         try:
-            self.run_id, self.short_id = load_exp_info(join(self.filepath, self.project_info_file))
+            self.run_id, self.short_id = load_exp_info(
+                join(self.filepath, self.project_info_file)
+            )
         except FileNotFoundError as e:
-            raise EmptyExperimentError(f"Experiment {self.filepath} has no valid project file.") from e
+            raise EmptyExperimentError(
+                f"Experiment {self.filepath} has no valid project file."
+            ) from e
         try:
-            self.log_data: pd.DataFrame = load_loggings(join(self.filepath, self.train_log_file))
+            self.log_data: pd.DataFrame = load_loggings(
+                join(self.filepath, self.train_log_file)
+            )
         except EmptyDataError as e:
             # raise EmptyExperimentError(f"Experiment {self.run_id} - {self.short_id} has no valid train_log.") from e
             self.log_data = pd.DataFrame()
@@ -83,7 +94,9 @@ class ExperimentData(object):
         series_epoch = self._get_epoch_series()
         series_metrics = self.log_data[metric_name]
         series_name = pd.Series(data=[self.short_id] * len(series_epoch))
-        df = pd.DataFrame({"epoch": series_epoch, metric_name: series_metrics, "name": series_name})
+        df = pd.DataFrame(
+            {"epoch": series_epoch, metric_name: series_metrics, "name": series_name}
+        )
 
         return df
 
@@ -120,7 +133,9 @@ class ExperimentData(object):
         :param epoch: epoch as int if not given the latest is returned
         """
         model_path = join(self.filepath, self.model_subfolder)
-        model_files: List[str] = sorted([f.path for f in os.scandir(model_path) if f.is_file()])
+        model_files: List[str] = sorted(
+            [f.path for f in os.scandir(model_path) if f.is_file()]
+        )
         ret_model = None
         if len(model_files) == 0:
             raise ModelNotFound(f"No model found for this experiment: {self.short_id}")
@@ -134,15 +149,15 @@ class ExperimentData(object):
                     ret_model = mf
 
         if ret_model is None:
-            raise ModelNotFound(f"Model from epoch: {epoch} not found in exp: {self.short_id}")
+            raise ModelNotFound(
+                f"Model from epoch: {epoch} not found in exp: {self.short_id}"
+            )
 
         return ret_model
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     p = "/Users/djohn/Projects/01_general/01_repos/sample-ml-project/experiment_outputs/2020-04-28T12.43.31.264Z-id_njs3"
     exp = ExperimentData(p)
     df = exp.get_log_for_metric("val_accuracy")
     mv = exp.get_best_metric_value("loss", "min")
-
-

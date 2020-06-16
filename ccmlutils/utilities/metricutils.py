@@ -26,8 +26,9 @@ def load_metrics(filepath: str) -> Metrics:
     with open(filepath, "r") as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)
 
-    return Metrics(accuracy=data["accuracy"],
-                   confusion_mat=np.array(data["confusion_mat"]))
+    return Metrics(
+        accuracy=data["accuracy"], confusion_mat=np.array(data["confusion_mat"])
+    )
 
 
 def cal_pred_metrics(predictions: Predictions) -> Metrics:

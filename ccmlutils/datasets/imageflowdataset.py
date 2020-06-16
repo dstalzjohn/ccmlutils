@@ -8,14 +8,16 @@ from ccmlutils.datasets.imagedata import get_image_flow_directory_generator
 
 
 class ImageFlowDataset(AbstractDataSet):
-
-    def __init__(self, filepath: str,
-                       batch_size: int,
-                       sub_dir: Optional[str] = None,
-                       target_size: Optional[Tuple[int, int]] = None,
-                       rescale: Optional[float] = None,
-                       classes: Optional[List[str]] = None,
-                       shuffle: bool = False):
+    def __init__(
+        self,
+        filepath: str,
+        batch_size: int,
+        sub_dir: Optional[str] = None,
+        target_size: Optional[Tuple[int, int]] = None,
+        rescale: Optional[float] = None,
+        classes: Optional[List[str]] = None,
+        shuffle: bool = False,
+    ):
         super().__init__()
         self.file_path = filepath
         self.batch_size = batch_size
@@ -33,7 +35,7 @@ class ImageFlowDataset(AbstractDataSet):
             self.target_size,
             self.rescale,
             self.classes,
-            self.shuffle
+            self.shuffle,
         )
         return flow_data_gen
 
@@ -51,5 +53,9 @@ class ImageFlowDataset(AbstractDataSet):
         )
 
     def _exists(self) -> bool:
-        target_folder = self.file_path if self.sub_dir is None else join(self.file_path, self.sub_dir)
+        target_folder = (
+            self.file_path
+            if self.sub_dir is None
+            else join(self.file_path, self.sub_dir)
+        )
         return Path(target_folder).exists()

@@ -14,11 +14,12 @@ def defaulttest(test_set, experiment: ExperimentData) -> Predictions:
     filenames = test_set.filenames
     class_indices = test_set.class_indices
     classes = test_set.classes
-    predictions: Predictions = prediction_factory(preds_output, filenames, classes, class_indices)
+    predictions: Predictions = prediction_factory(
+        preds_output, filenames, classes, class_indices
+    )
 
     return predictions
 
 
 def defaulttest_node(test_set, experiment: ExperimentData) -> Dict[str, Predictions]:
     return dict(predictions=defaulttest(test_set, experiment))
-

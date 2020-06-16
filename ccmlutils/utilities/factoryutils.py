@@ -10,7 +10,7 @@ class ImportException(Exception):
 
 
 def init_object_node(input_dict=None) -> Dict[str, Any]:
-    return {'class': init_object(input_dict)}
+    return {"class": init_object(input_dict)}
 
 
 def init_object(input_dict: Optional[dict] = None) -> Any:

@@ -4,14 +4,15 @@ from typing import Dict, Tuple, List, Optional, Any
 import tensorflow.keras.preprocessing.image as keras_image
 
 
-def get_image_flow_directory_generator(filepath: str,
-                                       batch_size: int,
-                                       sub_dir: Optional[str] = None,
-                                       target_size: Optional[Tuple[int, int]] = None,
-                                       rescale: Optional[float] = None,
-                                       classes: Optional[List[str]] = None,
-                                       shuffle: bool = False,
-                                       ) -> Any:
+def get_image_flow_directory_generator(
+    filepath: str,
+    batch_size: int,
+    sub_dir: Optional[str] = None,
+    target_size: Optional[Tuple[int, int]] = None,
+    rescale: Optional[float] = None,
+    classes: Optional[List[str]] = None,
+    shuffle: bool = False,
+) -> Any:
     """
     Creates an image dataset for training or testing
     :param filepath: path where the images are located
@@ -26,16 +27,18 @@ def get_image_flow_directory_generator(filepath: str,
     image_generator = keras_image.ImageDataGenerator(rescale=rescale)
     # switch between categorical and binary if exactly two classes are given
     # if no class list is given, categorical is used
-    class_mode = 'categorical'
+    class_mode = "categorical"
     if classes is not None and len(classes) == 2:
-        class_mode = 'binary'
+        class_mode = "binary"
 
     target_dir = filepath if sub_dir is None else join(filepath, sub_dir)
-    image_set = image_generator.flow_from_directory(target_dir,
-                                                    target_size=target_size,
-                                                    batch_size=batch_size,
-                                                    class_mode=class_mode,
-                                                    classes=classes,
-                                                    shuffle=shuffle)
+    image_set = image_generator.flow_from_directory(
+        target_dir,
+        target_size=target_size,
+        batch_size=batch_size,
+        class_mode=class_mode,
+        classes=classes,
+        shuffle=shuffle,
+    )
 
     return image_set

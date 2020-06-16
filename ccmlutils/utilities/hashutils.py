@@ -4,12 +4,8 @@ import string
 ALPHANUMERICLIST = list(string.digits + string.ascii_lowercase)
 
 
-def generate_short_id(
-    run_id, id_len=4
-):
-    hash_value = hashlib.md5(
-        str([run_id]).encode()
-    ).hexdigest()
+def generate_short_id(run_id, id_len=4):
+    hash_value = hashlib.md5(str([run_id]).encode()).hexdigest()
     hash_value = int(hash_value, base=16)
     poss_values = len(ALPHANUMERICLIST) ** id_len
     hash_value = hash_value % poss_values
