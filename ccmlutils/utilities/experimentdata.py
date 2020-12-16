@@ -26,7 +26,7 @@ class LogEmpty(Exception):
 
 def load_exp_info(exp_info_file) -> Tuple[str, str]:
     with open(exp_info_file, "r") as f:
-        data = yaml.load(f)
+        data = yaml.load(f, Loader=yaml.SafeLoader)
 
     return data[RUN_ID_KEY], data[SHORT_ID_KEY]
 

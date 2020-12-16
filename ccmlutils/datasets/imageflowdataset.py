@@ -12,6 +12,7 @@ class ImageFlowDataset(AbstractDataSet):
         self,
         filepath: str,
         batch_size: int,
+        set_name: str,
         sub_dir: Optional[str] = None,
         target_size: Optional[Tuple[int, int]] = None,
         rescale: Optional[float] = None,
@@ -26,6 +27,7 @@ class ImageFlowDataset(AbstractDataSet):
         self.rescale = rescale
         self.classes = classes
         self.shuffle = shuffle
+        self.set_name = set_name
 
     def _load(self) -> Any:
         flow_data_gen = get_image_flow_directory_generator(

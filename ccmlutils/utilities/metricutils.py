@@ -46,7 +46,8 @@ def cal_pred_metrics_node(predictions: Predictions) -> Dict[str, Metrics]:
     return dict(metrics=cal_pred_metrics(predictions))
 
 
-def save_metrics_node(metric: Metrics, store_path: str, yaml_filename: str):
-    filepath = subs_path_and_create_folder(join(store_path, yaml_filename))
-    metric.save(filepath)
+def save_metrics_node(metric: Metrics, store_path: str, yaml_filename: str, set_name: str):
+    sub_store_path = subs_path_and_create_folder(store_path)
+    target_yaml_file = join(sub_store_path, f"{yaml_filename}_{set_name}.yml")
+    metric.save(target_yaml_file)
     return dict()
